@@ -1,0 +1,143 @@
+1)R: Selecionar colunas de tabelas diferentes para uma melhor analise do banco de dados.
+
+2)R: INNER: seleciona elementos específicos de 2 tabelas e faz uma interceção.
+LEFT: Pega todos os elementos da primeira tabela e une com a coluna selecionada da segunda
+ROGHT: Pega todos os elementos da segunda tabela e une com a coluna selecionada da primeira
+FULL: Pega tudo da primeira e segunda tabela
+
+3)
+create database restaurante;
+use restaurante;
+create table clientes(
+	clientes_id int primary key not null,
+    nome varchar(50) not null,
+    cidade varchar(50) not null
+);
+create table pedidos(
+	pedido_id int primary key not null,
+    cliente_id int not null,
+    valor float not null
+);
+insert into clientes values
+(1,"Ana","São Paulo"),
+(2,"Bruno","Rio de Janeiro"),
+(3,"Carla","Curitiba"),
+(4,"Daniel","Recife");
+insert into pedidos values
+(101,1,250.00),
+(102,2,300.00),
+(103,2,150.00),
+(104,3,400.00);
+
+
+#a)
+select c.nome, p.valor 
+from pedidos p
+inner join clientes c
+on p.cliente_id = c.clientes_id;
+
+#b)
+select c.*, p.valor 
+from clientes c
+left join pedidos p
+on p.cliente_id = c.clientes_id;
+
+#c)
+select * from pedidos
+
+#d)
+SELECT c.nome, p.valor
+FROM clientes c
+FULL JOIN pedidos p ON c.clientes_id = p.cliente_id;
+
+#e)
+select c.*, p.valor 
+from clientes c
+left join pedidos p
+on p.cliente_id = c.clientes_id;
+
+5)
+
+create database loja;
+use loja;
+
+
+CREATE TABLE Produtos (
+    produto_id INT PRIMARY KEY NOT NULL,
+    nome VARCHAR(50) NOT NULL,
+    categoria VARCHAR(50) NOT NULL,
+    preco FLOAT NOT NULL
+);
+
+-- Inserção dos dados na tabela Produtos
+INSERT INTO Produtos (produto_id, nome, categoria, preco) VALUES
+(1, 'Notebook', 'Eletrônicos', 3000.00),
+(2, 'Smartphone', 'Eletrônicos', 2000.00),
+(3, 'Fone de Ouvido', 'Acessórios', 200.00),
+(4, 'Mochila', 'Acessórios', 150.00);
+
+-- Criação da tabela Vendas
+CREATE TABLE Vendas (
+    venda_id INT PRIMARY KEY NOT NULL,
+    cliente_id INT NOT NULL,
+    produto_id INT NOT NULL,
+    data_venda DATE NOT NULL,
+    quantidade INT NOT NULL
+);
+
+-- Inserção dos dados na tabela Vendas
+INSERT INTO Vendas (venda_id, cliente_id, produto_id, data_venda, quantidade) VALUES
+(201, 1, 1, '2025-01-10', 1),
+(202, 2, 2, '2025-01-11', 2),
+(203, 3, 4, '2025-01-15', 1),
+(204, 5, 1, '2025-01-20', 1);
+
+-- Criação da tabela Estoque
+CREATE TABLE Estoque (
+    produto_id INT PRIMARY KEY NOT NULL,
+    quantidade_disponivel INT NOT NULL,
+    fornecedor_id INT NOT NULL
+);
+
+-- Inserção dos dados na tabela Estoque
+INSERT INTO Estoque (produto_id, quantidade_disponivel, fornecedor_id) VALUES
+(1, 5, 101),
+(2, 10, 102),
+(3, 20, 103),
+(4, 15, 101);
+
+-- Criação da tabela Fornecedores
+CREATE TABLE Fornecedores (
+    fornecedor_id INT PRIMARY KEY NOT NULL,
+    nome VARCHAR(50) NOT NULL,
+    cidade VARCHAR(50) NOT NULL
+);
+
+-- Inserção dos dados na tabela Fornecedores
+INSERT INTO Fornecedores (fornecedor_id, nome, cidade) VALUES
+(101, 'Tech Supplies', 'São Paulo'),
+(102, 'Mobile World', 'Rio de Janeiro'),
+(103, 'Audio Store', 'Belo Horizonte');
+
+#a)
+SELECT 
+p.nome AS nome_produto,
+v.data_venda
+FROM Vendas v
+INNER JOIN Produtos p ON v.produto_id = p.produto_id;
+
+#b)
+SELECT 
+p.nome AS nome_produto,
+e.quantidade_disponivel,
+f.nome AS nome_fornecedor
+FROM Produtos p
+LEFT JOIN Estoque e ON p.produto_id = e.produto_id
+LEFT JOIN Fornecedores f ON e.fornecedor_id = f.fornecedor_id;
+
+#c)
+SELECT 
+f.nome AS nome_fornecedor,
+p.nome AS nome_produto
+FROM Fornecedores f
+CROSS JOIN Produtos p;
